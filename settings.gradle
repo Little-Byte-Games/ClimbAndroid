@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':tmp-debug-1.0.0'
