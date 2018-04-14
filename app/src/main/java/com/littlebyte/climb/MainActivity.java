@@ -14,19 +14,21 @@ import io.swagger.client.api.AccountApi;
 import io.swagger.client.model.ApplicationUser;
 
 public class MainActivity extends AppCompatActivity {
+    private AccountApi accountApi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        accountApi = new AccountApi();
+        accountApi.setBasePath("http://192.168.196.1:45455");
     }
 
     public void onRegisterClick(View view) {
         final TextView mTextView = findViewById(R.id.textView);
-        mTextView.setText("loading...");
-
-        AccountApi accountApi = new AccountApi();
-        accountApi.setBasePath("http://192.168.196.1:45455");
+        mTextView.setText("registering...");
 
         final EditText emailInput = findViewById(R.id.emailInput);
         final String email = emailInput.getText().toString();
@@ -45,8 +47,32 @@ public class MainActivity extends AppCompatActivity {
                 }, new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mTextView.setText("Nope");
+                        mTextView.setText("Couldn't register!");
 
+                    }
+                }
+        );
+    }
+
+    public void onLoginClick(View view) {
+        final TextView mTextView = findViewById(R.id.textView);
+        mTextView.setText("logging in...");
+
+        final EditText emailInput = findViewById(R.id.emailInput);
+        final String email = emailInput.getText().toString();
+
+        final EditText passwordInput = findViewById(R.id.passwordInput);
+        final String password = passwordInput.getText().toString();
+
+        accountApi.accountLogIn(email, password, new Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mTextView.setText("Logged In");
+                    }
+                }, new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mTextView.setText("Couldn't log in!");
                     }
                 }
         );
